@@ -1,87 +1,54 @@
-# api_final
+# Yatube API
 
-REST API для социальной сети Yatube: публикации, комментарии, сообщества, подписки. Аутентификация по JWT-токену.
+REST API for the Yatube social network: posts, comments, groups and subscriptions. Authentication with JWT.
 
-## Стек
+Built during the *Python Developer* course at Yandex Practicum (2025–2026). Every project was reviewed and accepted by a course mentor.
 
-Python 3.x, Django 5, Django REST Framework, Simple JWT, SQLite.
+## Tech stack
 
-## Установка
+Python 3 · Django 5 · Django REST Framework · Simple JWT · SQLite
 
-Клонировать репозиторий и перейти в него:
+## Endpoints
 
-```
-git clone <url>
-cd api_final_yatube
-```
+| Method | Path | Purpose |
+|---|---|---|
+| `POST` | `/api/v1/jwt/create/` | obtain access/refresh tokens |
+| `GET/POST` | `/api/v1/posts/` | list (paginated) / create posts |
+| `GET/PUT/PATCH/DELETE` | `/api/v1/posts/<id>/` | single post — write access for the author only |
+| `GET/POST` | `/api/v1/posts/<id>/comments/` | comments of a post |
+| `GET` | `/api/v1/groups/` | groups |
+| `GET/POST` | `/api/v1/follow/` | subscriptions of the current user, `?search=<username>` |
 
-Создать и активировать виртуальное окружение:
+Interactive documentation: `http://127.0.0.1:8000/redoc/`.
 
-```
+## Run locally
+
+```bash
 python -m venv venv
-source venv/bin/activate    # Linux/macOS
-venv\Scripts\activate       # Windows
-```
-
-Установить зависимости:
-
-```
+source venv/bin/activate          # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-```
-
-Выполнить миграции и запустить сервер:
-
-```
 cd yatube_api
 python manage.py migrate
 python manage.py runserver
 ```
 
-Документация API доступна по адресу `http://127.0.0.1:8000/redoc/`.
+Optional: set `DJANGO_SECRET_KEY` in the environment; a development default is used otherwise.
 
-## Примеры запросов
+## Example
 
-Получить JWT-токен:
-
-```
-POST /api/v1/jwt/create/
-{
-    "username": "user",
-    "password": "pass"
-}
-```
-
-Получить список постов:
-
-```
-GET /api/v1/posts/
-```
-
-Создать пост (требуется заголовок `Authorization: Bearer <access-token>`):
-
-```
+```http
 POST /api/v1/posts/
-{
-    "text": "Текст поста",
-    "group": 1
-}
+Authorization: Bearer <access-token>
+
+{"text": "Hello, Yatube", "group": 1}
 ```
 
-Подписаться на пользователя:
+## Tests
 
-```
-POST /api/v1/follow/
-{
-    "following": "username"
-}
+```bash
+pytest          # 55 tests
 ```
 
-Поиск по подпискам:
+## Author
 
-```
-GET /api/v1/follow/?search=username
-```
-
-## Автор
-
-Roman Tanashkin
+Roman Tanashkin — [github.com/RomanTanashkin](https://github.com/RomanTanashkin)
